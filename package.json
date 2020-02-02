@@ -11,10 +11,11 @@
     "react-scripts": "3.3.0"
   },
   "scripts": {
-    "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "env:decrypt": "dotenvenc -d react-star-wars",
+    "start": "react-scripts start",
+    "test": "react-scripts test"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -32,6 +33,9 @@
     ]
   },
   "devDependencies": {
+    "dotenv": "^8.2.0",
+    "dotenvenc": "^1.0.4",
+    "env-cmd": "^10.0.1",
     "serialize-javascript": "^2.1.1"
   }
 }

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import "./styles.css";
 import Dropdown from "./Dropdown";
 import Details from "./Details";
 
