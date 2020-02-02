@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 import Dropdown from "./Dropdown";
 import Details from "./Details";
 
@@ -28,7 +29,7 @@ const findPersona = (people = [], search) =>
     )
   );
 
-export default function App() {
+export default function App({ tmdbApiKey }) {
   const [people, setPeople] = useState([]);
   const [persona, setPersona] = useState(first(people));
 
@@ -77,3 +78,7 @@ export default function App() {
     </div>
   );
 }
+
+App.propTypes = {
+  tmdbApiKey: PropTypes.string
+};

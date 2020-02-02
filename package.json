@@ -11,10 +11,10 @@
     "react-scripts": "3.3.0"
   },
   "scripts": {
-    "build": "react-scripts build",
+    "build": "env-cmd react-scripts build",
     "eject": "react-scripts eject",
     "env:decrypt": "dotenvenc -d react-star-wars",
-    "start": "react-scripts start",
+    "start": "env-cmd react-scripts start",
     "test": "react-scripts test"
   },
   "eslintConfig": {
