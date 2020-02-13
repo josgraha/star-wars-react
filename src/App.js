@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import Dropdown from "./Dropdown";
+import GridList from "./grid-list/";
 import Details from "./Details";
 
 const peopleEndpoint = "https://swapi.co/api/people/";
@@ -34,7 +34,7 @@ export default function App({ tmdbApiKey }) {
   const [persona, setPersona] = useState(first(people));
 
   const onChange = event => {
-    const characterName = event.target.value;
+    const characterName = event.value;
     const newPersona = findPersona(people, characterName);
     setPersona(newPersona);
   };
@@ -48,32 +48,40 @@ export default function App({ tmdbApiKey }) {
         })
       );
     }
-    fetchJson(peopleEndpoint)
-      .then(async response => {
-        const { results } = response;
-        console.log("DEBUG: response", response);
-        const people = await Promise.all(
-          results.map(async ({ name, films }) => {
-            const filmData = await filmTitles(films);
-            return {
-              name,
-              films: filmData
-            };
-          })
-        );
-        return people;
-      })
-      .then(people => {
-        setPeople(people);
-        setPersona(first(people));
-      });
+    const fetchPersonas = endpoint => {
+      fetchJson(endpoint)
+        .then(async response => {
+          const { results } = response;
+          console.log("DEBUG: response", response);
+          const people = await Promise.all(
+            results.map(async ({ name, films }) => {
+              const filmData = await filmTitles(films);
+              return {
+                name,
+                films: filmData
+              };
+            })
+          );
+          return people;
+        })
+        .then(people => {
+          setPeople(people);
+          setPersona(first(people));
+        });
+    };
+    fetchPersonas(peopleEndpoint);
   }, []);
   const characters = peopleNames(people);
   const disabled = characters.length <= 0;
   const { characterName, films } = extractAttributes(persona);
   return (
     <div>
-      <Dropdown options={characters} onChange={onChange} disabled={disabled} />
+      <GridList
+        options={characters}
+        selected={characterName}
+        onChange={onChange}
+        disabled={disabled}
+      />
       {!disabled && <Details characterName={characterName} films={films} />}
     </div>
   );

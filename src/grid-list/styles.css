@@ -1,0 +1,16 @@
+.grid-list {
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.grid-list li {
+    list-style: none;
+    padding: 1em 1em;
+    margin: 1em 1em;
+}
+
+.grid-list .selected {
+    background-color: azure;
+    border: 1px navy dotted;
+}
