@@ -1,88 +1,62 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer } from "react";
 import PropTypes from "prop-types";
+import Actions from "./actions";
 import GridList from "./grid-list/";
 import Details from "./Details";
 
-const peopleEndpoint = "https://swapi.co/api/people/";
+import { findPersona, loadApi } from "./api";
 
-const first = (list = []) => list[0];
+const ApiStatus = {
+  loading: "Loading",
+  loaded: "Loaded"
+};
 
-const fetchJson = async url =>
-  await fetch(url).then(response => response.json());
+const initialState = {
+  movieData: {
+    characters: [],
+    films: []
+  },
+  selectedCharacter: null,
+  status: ApiStatus.loading
+};
 
-const extractName = ({ name }) => name;
-
-const extractFilms = ({ films = [] }) => films;
-
-const extractAttributes = (persona = {}) => ({
-  characterName: extractName(persona),
-  films: extractFilms(persona)
-});
-
-const peopleNames = people => people.map(extractName);
-
-const findPersona = (people = [], search) =>
-  first(
-    people.filter(
-      ({ name = "" }) =>
-        name.toLocaleLowerCase().indexOf(search.toLocaleLowerCase()) >= 0
-    )
-  );
+const reducer = (state, action) => {
+  switch (action.type) {
+    case Actions.SET_MOVIE_DATA:
+      return { ...state, movieData: action.payload, status: ApiStatus.loaded };
+    default:
+      return state;
+  }
+};
 
 export default function App({ tmdbApiKey }) {
-  const [people, setPeople] = useState([]);
-  const [persona, setPersona] = useState(first(people));
-
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const { movieData, selectedCharacter, status } = state;
+  const { characters = [] } = movieData;
+  const options = characters.map(({ name, actor, profileUrl }) => ({
+    key: name,
+    title: name,
+    subtitle: actor,
+    imageUrl: profileUrl
+  }));
   const onChange = event => {
     const characterName = event.value;
-    const newPersona = findPersona(people, characterName);
-    setPersona(newPersona);
+    const newPersona = findPersona(characters, characterName);
+    dispatch({ type: Actions.VIEW_CHARACTER, payload: newPersona });
   };
 
   useEffect(() => {
-    async function filmTitles(films) {
-      return await Promise.all(
-        films.map(async filmUrl => {
-          const filmObject = await fetchJson(filmUrl);
-          return `Episode ${filmObject.episode_id} - ${filmObject.title}`;
-        })
-      );
+    if (status !== ApiStatus.loaded) {
+      loadApi(tmdbApiKey).then(action => dispatch(action));
     }
-    const fetchPersonas = endpoint => {
-      fetchJson(endpoint)
-        .then(async response => {
-          const { results } = response;
-          console.log("DEBUG: response", response);
-          const people = await Promise.all(
-            results.map(async ({ name, films }) => {
-              const filmData = await filmTitles(films);
-              return {
-                name,
-                films: filmData
-              };
-            })
-          );
-          return people;
-        })
-        .then(people => {
-          setPeople(people);
-          setPersona(first(people));
-        });
-    };
-    fetchPersonas(peopleEndpoint);
-  }, []);
-  const characters = peopleNames(people);
-  const disabled = characters.length <= 0;
-  const { characterName, films } = extractAttributes(persona);
+  }, [tmdbApiKey, status]);
+
   return (
     <div>
-      <GridList
-        options={characters}
-        selected={characterName}
-        onChange={onChange}
-        disabled={disabled}
-      />
-      {!disabled && <Details characterName={characterName} films={films} />}
+      <GridList options={options} onChange={onChange} />
+      {selectedCharacter && (
+        <Details characterName={selectedCharacter} films={[]} />
+      )}
     </div>
   );
 }

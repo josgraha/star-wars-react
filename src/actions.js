@@ -1,0 +1,4 @@
+export default {
+  API_LOADED: "API_LOADED",
+  SET_MOVIE_DATA: "SET_MOVIE_DATA"
+};

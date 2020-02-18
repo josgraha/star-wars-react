@@ -5,14 +5,18 @@ import "./styles.css";
 const noop = () => {};
 export default function GridList({ options = [], selected = "", onChange }) {
   const renderItems = lst =>
-    lst.map(item => {
+    lst.map(({ key, title, subtitle, imageUrl }) => {
       const [className, onClick] =
-        selected === item
+        selected === title
           ? ["selected", noop]
-          : [null, () => onChange({ value: item })];
+          : [null, () => onChange({ value: title })];
       return (
-        <li key={item} className={className} onClick={onClick}>
-          {item}
+        <li key={key || title} className={className} onClick={onClick}>
+          <div className="grid-image">
+            {imageUrl && <img src={imageUrl} alt={title} />}
+          </div>
+          <h3>{title}</h3>
+          <div>{subtitle}</div>
         </li>
       );
     });

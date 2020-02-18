@@ -3,12 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
-    "@testing-library/user-event": "^7.1.2",
+    "@leonardocabeza/the-movie-db": "^3.0.9",
     "react": "^16.12.0",
-    "react-dom": "^16.12.0",
-    "react-scripts": "3.3.0"
+    "react-dom": "^16.12.0"
   },
   "scripts": {
     "build": "env-cmd react-scripts build",
@@ -33,9 +30,13 @@
     ]
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
     "dotenv": "^8.2.0",
     "dotenvenc": "^1.0.4",
     "env-cmd": "^10.0.1",
+    "react-scripts": "3.3.0",
     "serialize-javascript": "^2.1.1"
   }
 }
