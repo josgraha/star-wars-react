@@ -1,38 +1,59 @@
-.App {
-  text-align: center;
+.app {
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
+.app .navbar {
   background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
   color: white;
 }
 
-.App-link {
+.app .navbar .navbar-brand {
+  display: flex;
+  align-items: center;
+}
+
+.app .navbar .menu-icon {
+  color: white;
+  font-size: 24px;
+}
+
+.app .navbar .navbar-brand .branding {
+  font-size: 36px;
+  font-stretch: narrower;
+  font-variant: small-caps;
+  font-weight: bold;
+  color: white;
+  margin-left: 16px;
+}
+
+.app .navbar .navbar-brand .branding p {
+  margin-top: -4px;
+  margin-left: -4px;
+}
+
+.app .navbar .navbar-brand .branding p::first-letter {
+  font-size: 130%;
+  margin-right: -4px;
+}
+
+.app .navbar .navbar-brand .branding.logo {
+  font-size: 48px;
+}
+
+.input.wide-search {
+  min-width: 40vw;
+}
+
+.app-link {
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.card-list .selection-row {
+  background-color: lightskyblue;
+  color: white;
+}
+
+.card-list .detail-list-dark {
+  background-color: lightskyblue;
+  color: white;
+  margin-top: 0;
 }

@@ -1,0 +1,69 @@
+.card-list .card {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+}
+
+.card-list .card .card-image {
+  background-color: darkslateblue;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  height: 278px;
+  min-width: 185px;
+  width: 100%;
+}
+
+.card-list .card .card-image .missing-photo {
+  font-size: 64px;
+  color: white;
+}
+
+.card-list .card .card-content {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  /* min-height: 269px; */
+}
+
+.card-list .card .card-content .media {
+  display: flex;
+  flex-grow: 1;
+}
+.card-list .card .card-content .media .media-content {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.card-list .card .card-content .media .media-content .title {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  text-align: center;
+  flex-grow: 1;
+}
+
+.card-list .card .card-content .media .media-content .subtitle {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  text-align: center;
+  flex-grow: 1;
+}
+.card-list .card .card-content .content {
+  display: flex;
+}
+
+.card-list .card .footer {
+  display: flex;
+}
+
+.card-list .card-footer .details-icon {
+  margin-left: 16px;
+}
+
+.card-image .photo {
+  display: flex;
+  flex: 1;
+}
