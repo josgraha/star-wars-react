@@ -1,0 +1,350 @@
+import { CodeSurfer, CodeSurferColumns, Step } from "code-surfer";
+import { github, vsDark } from "@code-surfer/themes";
+
+export const theme = vsDark;
+
+# React Hooks in Practice 👋
+
+---
+
+## My "go-to" hooks
+
+- useReducer
+- useState
+- useEffect
+- useCallback
+- useMemo
+
+---
+
+## Demo App
+
+- Inspired by interview scenarios
+- Candidates are asked to build something
+- Usually: with an API.
+
+---
+
+## Features
+
+- show a list of people and films
+- select a person and see what films they were in
+- text search? (why not)
+
+---
+
+## Bootstrapping
+
+* We start with the `useReducer` hook
+* We establish the initial state of the app
+* Alternatively `useState` to decentralize app state
+
+---
+
+<CodeSurferColumns themes={[vsDark, github]}>
+
+<Step>
+
+```js
+const initialState = {};
+```
+
+```js
+const reducer = (state, action) => {
+  switch (action.type) {
+    default:
+      return state;
+  }
+};
+```
+
+</Step>
+
+<Step>
+
+```js
+const initialState = {
+  movieData: {
+    characters: [],
+    films: []
+  },
+  searchText: null,
+  selectedCharacter: null
+};
+```
+
+```js
+const reducer = (state, action) => {
+  switch (action.type) {
+    case Actions.SET_MOVIE_DATA:
+      return { ...state, movieData: action.payload, status: ApiStatus.loaded };
+    case Actions.TOGGLE_VIEW_CHARACTER:
+      return { ...state, selectedCharacter: action.payload };
+    case Actions.SEARCH:
+      return { ...state, searchText: action.payload };
+    default:
+      return state;
+  }
+};
+```
+
+</Step>
+
+</CodeSurferColumns>
+
+---
+
+<CodeSurfer>
+
+```js title="useReducer: Example"
+const [state, dispatch] = useReducer(reducer, initialState);
+```
+</CodeSurfer>
+
+---
+
+## useReducer
+- `Action` by convention is: `{ type: string; payload?: any; }`
+- accepts a reducer of type `State -> Action -> State`
+- `useReducer` returns a pair of `[State, Dispatch]`
+- where dispatch is `Action -> IO`
+
+---
+
+<CodeSurfer>
+
+```js title="useState: Example"
+const [state, setState] = useState(initialState);
+// somewhere else in your code
+setState(newState);
+```
+
+</CodeSurfer>
+
+---
+
+## useState
+
+- during initial render returned `State` is the same as the argument
+- signature: `State -> [State, State -> IO]`
+- `setState` will trigger a re-render
+
+---
+
+<CodeSurfer>
+
+```js title="useEffect: Example"
+function MyComponent(props) {
+useEffect(() => {
+  const subscription = props.source.subscribe();
+  return () => {
+    // Clean up the subscription
+    subscription.unsubscribe();
+  };
+}, [source]);
+ // ... continued
+}
+```
+
+</CodeSurfer>
+
+---
+
+## Doing Real Stuff
+
+- now we can kick off the side effects we need
+- getting to know our friend `useEffect`
+
+---
+
+## useEffect
+
+- accepts a function that contains imperative, possibly effectful code
+- accepts an array of dependencies that will trigger the effect to run again
+- can return a cleanup handler that will be invoked before re-invoking the function
+
+---
+
+## useEffect: In Practice
+
+- similar to `cDM` in class components
+- good place for api calls
+- good place to do effectful things after component is mounted
+- much more versatile than L/C methods
+
+---
+
+<CodeSurfer>
+
+```js title="useEffect: Demo App"
+useEffect(() => {
+    // conditionally perform side-effect
+    if (status !== ApiStatus.loaded) {
+      loadApi(tmdbApiKey).then(action => dispatch(action));
+    }
+}, [tmdbApiKey, status]); // note the props
+```
+
+</CodeSurfer>
+
+---
+
+<CodeSurfer>
+
+```js title="useCallback: Example"
+const memoizedCallback = useCallback(
+  () => {
+    doSomething(a, b);
+  },
+  [a, b],
+);
+```
+
+</CodeSurfer>
+
+---
+
+## useCallback
+
+- pass an inline callback and an array of dependencies
+- callback is `memoized` until the dependencies change
+
+---
+
+<CodeSurfer>
+
+```js title="useCallback: Demo App"
+const renderCard = useCallback((props) => {
+  const expanded = key === selected;
+  const toggleSelect = () => {
+    const value = expanded ? null : key;
+    onChange({ value });
+  };
+  return (<DetailCard {...{...props, toggleSelect, expanded }} />);
+}, [onChange, selected]);
+```
+
+</CodeSurfer>
+
+---
+
+<CodeSurfer>
+
+```js title="useMemo: example"
+const memoizedValue = useMemo(() => computeExpensiveValue(a, b), [a, b]);
+```
+
+</CodeSurfer>
+
+---
+
+## useMemo
+
+- like `useCallback` but for values (not functions)
+
+---
+
+<CodeSurfer>
+
+```js title="useMemo: Demo App"
+  const imageComponent = useMemo(() =>
+    imageUrl ? (
+      <img className="photo" src={imageUrl} alt={subtitle} />
+    ) : (
+      <i className="fas fa-id-card-alt missing-photo" />
+    ), [imageUrl, subtitle]
+  );
+
+  return (<div className="card-image">{imageComponent}</div>);
+```
+
+</CodeSurfer>
+
+---
+
+## Other Hooks: In Practice
+
+- just some guidelines and notes to help familiarize
+- don't trust me, trust the API docs
+
+---
+
+## useRef
+
+- can be passed as a prop to `DOM` elements to access `DOM` API
+- can be used as a replacement for instance variables in class components
+
+
+---
+
+## useImperativeHandle
+
+- can be used to expose imperative methods to other components
+- works by "forwarding" refs
+- client component would use the `ref` prop to access your exposed API
+
+---
+
+## useLayoutEffect
+
+- guaranteed to fire after _all_ `DOM` mutations
+- might come in handy
+
+
+---
+
+## Back to Earth
+- we just scratched the surface
+- play around with the demo app and possibly extend it
+- create your own demo apps!
+- write your own hooks (but master the building blocks)
+- study other hooks (prior art)
+
+---
+
+## Resources
+
+- [Hooks API Reference](https://reactjs.org/docs/hooks-reference.html)
+- [TMDB API](https://developers.themoviedb.org/)
+- [Star Wars API](https://swapi.co/)
+
+---
+
+## Digging Deeper
+
+- [Build React Hooks from Scratch (Florence & Jackson)](https://www.youtube.com/watch?v=1jWS7cCuUXw)
+- [90% Cleaner Code with Hooks](https://www.youtube.com/watch?v=wXLf18DsV-I)
+- [Awesome React Hooks](https://github.com/rehooks/awesome-react-hooks)
+- [Dan's awesome but lenghty blog post on `useEffect`](https://overreacted.io/a-complete-guide-to-useeffect/)
+- [Fanboy Alert: Beyond React 16 demo!](https://www.youtube.com/watch?v=nLF0n9SACd4)
+
+---
+
+## Playing Around: Nits
+
+- variable column layout
+- ugly
+- key mismatch across data ApiStatus
+
+--- 
+
+## Playing Around: Cool
+
+- use [react-query](https://github.com/tannerlinsley/react-query) 
+- Suspense loading
+- React-Spring for animations
+- Hook up other endpoints
+
+---
+
+## Playing Around: Next-Next Steps?
+- Play with GQL
+- Convert to static website with GatsbyJS or SSR
+
+---
+
+## Thanks
+
+### Holla! 👋
+Joe Graham
+HMU @josgraha or josgraha@gmail.com
