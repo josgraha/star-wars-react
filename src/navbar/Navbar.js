@@ -1,6 +1,10 @@
 import React from "react";
 
 export default function Navbar({ onSearch }) {
+  const handleOnInput = e => {
+    const value = e.target.value;
+    onSearch({ value });
+  };
   return (
     <nav
       className="navbar is-fixed-top"
@@ -18,8 +22,9 @@ export default function Navbar({ onSearch }) {
           <p className="control has-icons-left">
             <input
               className="input wide-search"
-              type="text"
+              onInput={handleOnInput}
               placeholder="Search"
+              type="text"
             />
             <span className="icon is-left">
               <i className="fas fa-search" aria-hidden="true"></i>

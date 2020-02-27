@@ -1,11 +1,11 @@
-import React, { useEffect, useReducer } from "react";
+import React, { useEffect, useReducer, useMemo } from "react";
 import PropTypes from "prop-types";
 import Actions from "./actions";
 import Navbar from "./navbar";
 
 import { findPersona, loadApi } from "./api";
 
-import "./app.css";
+import "./App.css";
 import CardList from "./card-list";
 
 const ApiStatus = {
@@ -18,6 +18,7 @@ const initialState = {
     characters: [],
     films: []
   },
+  searchText: null,
   selectedCharacter: null,
   status: ApiStatus.loading
 };
@@ -28,10 +29,15 @@ const reducer = (state, action) => {
       return { ...state, movieData: action.payload, status: ApiStatus.loaded };
     case Actions.TOGGLE_VIEW_CHARACTER:
       return { ...state, selectedCharacter: action.payload };
+    case Actions.SEARCH:
+      return { ...state, searchText: action.payload };
     default:
       return state;
   }
 };
+
+const createContains = (searchText = "") => (target = "") =>
+  target.toLocaleLowerCase().indexOf(searchText.toLocaleLowerCase()) > -1;
 
 const characterToCardDetails = ({
   name,
@@ -70,8 +76,13 @@ const filmToCardDetails = ({ id, overview, posterUrl, title }) => {
 
 export default function App({ tmdbApiKey }) {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { movieData, selectedCharacter, status } = state;
+  const { movieData, searchText, selectedCharacter, status } = state;
   const { characters = [] } = movieData;
+  const filteredCharacters = useMemo( () => {
+    const containsSearchText = createContains(searchText);
+    return !searchText ? characters : characters.filter(({ name = '', actor = '' }) => containsSearchText(name) || containsSearchText(actor));
+}, [characters, searchText]);
+  const cardItems = filteredCharacters.map(characterToCardDetails);
 
   const findFilmsForPersona = persona =>
     persona && persona.films && persona.films.length > 0
@@ -96,9 +107,10 @@ export default function App({ tmdbApiKey }) {
       />
     );
 
-  const cardItems = characters.map(characterToCardDetails);
 
-  const onSearch = event => {};
+  const onSearch = ({ value }) => {
+    dispatch({ type: Actions.SEARCH, payload: value });
+  };
 
   const onChange = event => {
     const characterName = event.value;
